@@ -44,6 +44,12 @@ The values of **offset0** ~ **offset2** correspond to **offset_pos0** ~ **offset
 
 ## 4. How to launch the program.
 
+Launch the height estimation node.
 ```
 roslaunch height_estimator height_est.launch
+```
+
+Launch the pix hawk4.
+```
+roslaunch mavros px4.launch
 ```
