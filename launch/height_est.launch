@@ -1,0 +1,7 @@
+<launch>
+    <node pkg="height_estimator" type="h_est_node" name="h_est_node" output="screen"/>
+        <param name="offset0" type="double" value="0"/>
+        <param name="offset1" type="double" value="0"/>
+        <param name="offset2" type="double" value="0"/>
+        
+</launch>

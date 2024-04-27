@@ -22,6 +22,8 @@ include_directories(
 )
 
 add_executable(h_est_node 
+include/height_estimator/converter.cpp
+include/height_estimator/coordinate_transform.cpp
 include/height_estimator/height_estimator.cpp
 include/height_estimator/roll_pitch_extractor.cpp
 src/height_est_node.cpp)

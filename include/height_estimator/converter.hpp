@@ -14,7 +14,6 @@ class Converter{
         double convert_actaul2q_pan(int32_t inc);
         double convert_actual2q_lift(int32_t inc, double offset_i);
 
-
     private:
 
         mat31 offset_;
