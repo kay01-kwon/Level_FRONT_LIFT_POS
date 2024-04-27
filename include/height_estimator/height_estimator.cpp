@@ -51,9 +51,15 @@ void HeightEst::publish_values()
     Float64 height_msg;
     Float64 q_des_msg;
 
+    cout<<"roll: "<<phi*180.0/M_PI<<",  ";
+    cout<<"pitch: "<<theta*180.0/M_PI<<endl;
+
     get_roll_pitch();
     h_hat_ = get_height();
     q_lift_des_ = get_lift_des();
+
+    cout<<"Estimated height: "<<h_hat_<<endl;
+    cout<<"Corrected lift position: "<<q_lift_des_<<endl;
 
     height_msg.data = h_hat_;
     q_des_msg.data = q_lift_des_;
@@ -75,6 +81,7 @@ double HeightEst::get_height()
 {
 
     double Dx12, Dy12, Dz12;
+    double h_;
     coordTf_ptr->setPos(q_pan_, q_lift_);
 
     for(int i = 0; i < 3; i++)
@@ -84,11 +91,11 @@ double HeightEst::get_height()
     Dy12 = b_t_wc(1,0) - b_t_wc(1,1);
     Dz12 = b_t_wc(2,0) - b_t_wc(2,1);
     
-    h_hat_ = -Dx12*sin(theta) 
+    h_ = -Dx12*sin(theta) 
     + Dy12*cos(theta)*sin(phi)
     + Dz12*cos(theta)*cos(phi);
 
-    return h_hat_;
+    return h_;
 
 }
 
@@ -100,7 +107,7 @@ double HeightEst::get_lift_des()
 
     int32_t q_lift_des_inc;
 
-    q_lift_des_ = acos((-b_t_wc(2,1) - h_hat_ + c)/l)*180.0/M_PI;
+    q_lift_des_ = acos((-b_t_wc(2,1) - h_hat_ - c)/l)*180.0/M_PI;
 
     return q_lift_des_;
 }

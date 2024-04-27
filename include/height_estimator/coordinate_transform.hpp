@@ -15,9 +15,9 @@ class CoordTf{
 
         void TfSE3(mat33& R, mat31& t, mat44& T);
 
-        void rotLift(double q_lift_i, mat33& p_R_l);
-
         void rotPan(double q_pan_i, mat33& b_R_p);
+
+        void rotLift(double q_lift_i, mat33& p_R_l);
 
     private:
         mat14 vec_aug;
@@ -28,6 +28,7 @@ class CoordTf{
         mat31 t0;
 
         mat31 q_pan_;
+        mat31 q_pan_init;
         mat31 q_lift_;
 
 

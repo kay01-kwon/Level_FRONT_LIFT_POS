@@ -11,7 +11,7 @@ int main(int argc,char** argv)
     while(ros::ok())
     {
         ros::spinOnce();
-        h_est.print_roll_pitch();
+        // h_est.print_roll_pitch();
         h_est.publish_values();
         loop_rate.sleep();
     }

@@ -22,22 +22,24 @@ CoordTf::CoordTf()
     b_t_c << 0, 0, -c;
     t0 << 0, 0, 0;
 
+    q_pan_init << 0, -2*M_PI/3.0, 2*M_PI/3.0;
+
 }
 
 void CoordTf::setPos(mat31& q_pan, mat31& q_lift)
 {
-    q_pan_ = q_pan;
-    q_lift_ = q_lift;
+    q_pan_ = q_pan*M_PI/180.0 + q_pan_init;
+    q_lift_ = q_lift*M_PI/180.0;
 
     cout<<"Pan pos: ";
     for(int i = 0; i < 3; i++)
-        cout<<q_pan_(i)<<", ";
+        cout<<(q_pan_(i)-q_pan_init(i))*180.0/M_PI<<", ";
 
     cout<<"\n";
 
     cout<<"Lift pos: ";
     for(int i = 0; i < 3; i++)
-        cout<<q_lift_(i)<<", ";
+        cout<<q_lift_(i)*180.0/M_PI<<", ";
 
     cout<<"\n";
 
@@ -71,18 +73,6 @@ void CoordTf::TfSE3(mat33& R, mat31& t, mat44& T)
     // cout << "T: " << T << "\n"; 
 }
 
-void CoordTf::rotLift(double q_lift_i, mat33& p_R_l)
-{
-    double cl, sl;
-    cl = cos(q_lift_i);
-    sl = sin(q_lift_i);
-
-    p_R_l << cl, 0, -sl,
-            0, 1, 0,
-            sl, 0, cl;
-
-}
-
 void CoordTf::rotPan(double q_pan_i, mat33& b_R_p)
 {
     double cp, sp; 
@@ -92,5 +82,17 @@ void CoordTf::rotPan(double q_pan_i, mat33& b_R_p)
     b_R_p << cp, sp, 0,
         -sp, cp, 0,
         0, 0, 1;
+
+}
+
+void CoordTf::rotLift(double q_lift_i, mat33& p_R_l)
+{
+    double cl, sl;
+    cl = cos(q_lift_i);
+    sl = sin(q_lift_i);
+
+    p_R_l << cl, 0, -sl,
+            0, 1, 0,
+            sl, 0, cl;
 
 }
