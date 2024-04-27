@@ -28,6 +28,10 @@ The estimated height of obstacle: **/h_est**
 
 The desired position of front lift: **/q_des**
 
+Roll and pitch angle: **/rp_result** (deg)
+
+Herein, theta and phi represent pitch and roll, respectively.
+
 ## 3. Setup
 
 Navigate to launch directory.
