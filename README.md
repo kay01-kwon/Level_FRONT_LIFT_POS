@@ -49,6 +49,21 @@ Launch the height estimation node.
 roslaunch height_estimator height_est.launch
 ```
 
+How to install mavros.
+
+```
+sudo apt install ros-melodic-mavros ros-melodic-mavros-extras ros-melodic-mavros-msgs
+```
+
+```
+wget https://raw.githubusercontent.com/mavlink/mavros/master/mavros/scripts/install_geographiclib_datasets.sh
+```
+
+```
+sudo bash ./install_geographiclib_datasets.sh
+```
+
+
 Launch the pix hawk4.
 ```
 roslaunch mavros px4.launch
