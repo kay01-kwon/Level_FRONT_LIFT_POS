@@ -9,17 +9,21 @@
 #include <iostream>
 
 #include <msg_pkg/actual.h>
-
 #include <sensor_msgs/Imu.h>
+
 #include <std_msgs/Float64.h>
+
+#include <height_estimator/rp.h>
 
 using std::cout;
 using std::endl;
 
-using sensor_msgs::Imu;
 using msg_pkg::actual;
+using sensor_msgs::Imu;
+
 using std_msgs::Float64;
 
+using height_estimator::rp;
 
 class HeightEst{
 
@@ -51,6 +55,7 @@ class HeightEst{
 
         ros::Publisher h_est_publisher;
         ros::Publisher q_des_publisher;
+        ros::Publisher rp_publisher;
 
         double phi, theta;
 

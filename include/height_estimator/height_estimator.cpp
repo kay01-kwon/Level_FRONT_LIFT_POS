@@ -29,6 +29,7 @@ HeightEst::HeightEst()
 
     h_est_publisher = nh_.advertise<Float64>("/h_est",10);
     q_des_publisher = nh_.advertise<Float64>("/q_lift_des",10);
+    rp_publisher = nh_.advertise<rp>("/rp_result",10);
 
     // Dynamic memory allocation
     rp_extr_ptr = new RollPitchExtr();
@@ -50,6 +51,7 @@ void HeightEst::publish_values()
 {
     Float64 height_msg;
     Float64 q_des_msg;
+    rp rp_msg;
 
     cout<<"roll: "<<phi*180.0/M_PI<<",  ";
     cout<<"pitch: "<<theta*180.0/M_PI<<endl;
@@ -64,9 +66,12 @@ void HeightEst::publish_values()
     height_msg.data = h_hat_;
     q_des_msg.data = q_lift_des_;
 
+    rp_msg.theta = theta*180.0/M_PI;
+    rp_msg.phi = phi*180.0/M_PI;
+
     h_est_publisher.publish(height_msg);
     q_des_publisher.publish(q_des_msg);
-
+    rp_publisher.publish(rp_msg);
 }
 
 void HeightEst::get_roll_pitch()
