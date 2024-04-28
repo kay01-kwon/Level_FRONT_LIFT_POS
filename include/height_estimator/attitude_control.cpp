@@ -102,8 +102,8 @@ void AttCtrl::publish_values()
     }
 
     target_dxl_msg.target_dxl[0] = 2048;
-    target_dxl_msg.target_dxl[1] = (int32_t) -70.0/40.0*4096.0/360.0*30.0;
-    target_dxl_msg.target_dxl[2] = (int32_t) 70.0/40.0*4096.0/360.0*30.0;
+    target_dxl_msg.target_dxl[1] = (int32_t) -70.0/40.0*4096.0/360.0*60.0;
+    target_dxl_msg.target_dxl[2] = (int32_t) 70.0/40.0*4096.0/360.0*60.0;
 
     rp_msg.phi = phi;
     rp_msg.theta = theta;
