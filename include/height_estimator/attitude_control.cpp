@@ -18,10 +18,23 @@ AttCtrl::AttCtrl(mat31 offset)
     setup();
 }
 
-void AttCtrl::setup(int i)
+void AttCtrl::setup()
 {
+    // Initialize quaternion of imu
+    q_.x() = 0;
+    q_.y() = 0;
+    q_.z() = 0;
+    q_.w() = 1.0;
+
     nh_.getParam("q_lift_fix",q_lift_fix);
     nh_.getParam("Kp",Kp);
+
+    nh_.getParam("offset0",offset_(0));
+    nh_.getParam("offset1",offset_(1));
+    nh_.getParam("offset2",offset_(2));
+
+    for(int i = 0; i < 3; i++)
+        wheel_vel[i] = 0;
 
     /**
      * Subscriber setup
@@ -62,26 +75,63 @@ double AttCtrl::get_rear_lift_pos()
 {
     double q_lift_rear;
     q_lift_rear = q_lift_fix - Kp*theta;
+    return q_lift_rear;
 }
 
 void AttCtrl::publish_values()
 {
+    int32_t q_lift_des_inc[3];
+    double q_lift_rear;
 
+    rp rp_msg;
+
+    get_pitch();
+
+    q_lift_rear = get_rear_lift_pos();
+
+    q_lift_des_inc[0] = converter_ptr->convert_q_lift_des2inc(q_lift_fix, offset_(0));
+    
+    for(int i = 0; i < 2; i++)
+        q_lift_des_inc[i+1] = converter_ptr->convert_q_lift_des2inc(q_lift_rear, offset_(i+1));
+
+    for(int i = 0; i < 3; i++)
+    {
+        target_msg.target_LIFT[i] = q_lift_des_inc[i];
+        target_msg.target_PAN[i] = 0;
+        target_msg.target_WHEEL[i] = wheel_vel[i];
+    }
+
+    target_dxl_msg.target_dxl[0] = 2048;
+    target_dxl_msg.target_dxl[1] = (int32_t) -70.0/40.0*4096.0/360.0*30.0;
+    target_dxl_msg.target_dxl[2] = (int32_t) 70.0/40.0*4096.0/360.0*30.0;
+
+    rp_msg.phi = phi;
+    rp_msg.theta = theta;
+
+    target_publisher.publish(target_msg);
+    target_dxl_publisher.publish(target_dxl_msg);
+    rp_publisher.publish(rp_msg);
 }
 
-void AttCtrl::callback_imu(Imu::ConstPtr& imu_msg)
+void AttCtrl::callback_imu(const Imu::ConstPtr& imu_msg)
 {
     q_.x() = imu_msg->orientation.x;
     q_.y() = imu_msg->orientation.y;
     q_.z() = imu_msg->orientation.z;
     q_.w() = imu_msg->orientation.w;
+}
 
+void AttCtrl::callback_twist(const Twist::ConstPtr& twist_msg)
+{
+    for(int i = 0; i < 3; i++)
+        wheel_vel[i] = -(twist_msg->linear.x*0.169*60.0/M_PI);
+    
+    wheel_vel[2] = -wheel_vel[2];
 
 }
 
-void AttCtrl::callback_twist(Twist::ConstPtr& twist_msg)
+AttCtrl::~AttCtrl()
 {
-    for(int i = 0; i < 3; i++)
-        target_msg.target_WHEEL[i] = 
-        twist_msg->linear.x*0.169*60.0/M_PI;
+    delete rp_extr_ptr;
+    delete converter_ptr;
 }

@@ -1,0 +1,9 @@
+<launch>
+    <node pkg="height_estimator" type="attitude_control_node" name="control_node" output="screen"/>
+        <param name="offset0" type="double" value="0"/>
+        <param name="offset1" type="double" value="0"/>
+        <param name="offset2" type="double" value="0"/>
+        
+        <param name="Kp" type="double" value="10"/>
+        <param name="q_lift_fix" type="double" value="60.0"/>
+</launch>

@@ -32,13 +32,15 @@ class AttCtrl{
 
         AttCtrl(mat31 offset);
 
-        void setup(int i);
+        void setup();
 
         void get_pitch();
 
         double get_rear_lift_pos();
 
         void publish_values();
+
+        ~AttCtrl();
 
 
     private:
@@ -55,8 +57,8 @@ class AttCtrl{
         RollPitchExtr* rp_extr_ptr;
         Converter* converter_ptr;
 
-        void callback_imu(Imu::ConstPtr& imu_msg);
-        void callback_twist(Twist::ConstPtr& twist_msg);
+        void callback_imu(const Imu::ConstPtr& imu_msg);
+        void callback_twist(const Twist::ConstPtr& twist_msg);
 
         double q_lift_fix;
 
@@ -66,12 +68,10 @@ class AttCtrl{
         mat31 offset_;
         double Kp;
 
-        mat31 q_lift_des;
-
         quat q_;
         double theta, phi;
 
-
+        int32_t wheel_vel[3];
 
 };
 

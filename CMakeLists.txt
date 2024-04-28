@@ -40,3 +40,11 @@ include/height_estimator/roll_pitch_extractor.cpp
 src/height_est_node.cpp)
 
 target_link_libraries(h_est_node ${catkin_LIBRARIES})
+
+add_executable(attitude_control_node 
+include/height_estimator/converter.cpp
+include/height_estimator/roll_pitch_extractor.cpp
+include/height_estimator/attitude_control.cpp
+src/attitude_control_node.cpp)
+
+target_link_libraries(attitude_control_node ${catkin_LIBRARIES})
