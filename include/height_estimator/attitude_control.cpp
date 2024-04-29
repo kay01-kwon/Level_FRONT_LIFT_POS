@@ -78,6 +78,7 @@ void AttCtrl::get_pitch()
 double AttCtrl::get_rear_lift_pos(int i)
 {
     double q_lift_rear;
+    // feedback data: real lift position and pitch
     q_lift_rear = q_lift_actual(i+1) + Kp*theta;
     return q_lift_rear;
 }
