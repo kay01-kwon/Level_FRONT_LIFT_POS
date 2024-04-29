@@ -4,6 +4,6 @@
         <param name="offset1" type="double" value="0"/>
         <param name="offset2" type="double" value="0"/>
         
-        <param name="Kp" type="double" value="10"/>
+        <param name="Kp" type="double" value="100"/>
         <param name="q_lift_fix" type="double" value="60.0"/>
 </launch>

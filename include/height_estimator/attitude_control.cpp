@@ -34,7 +34,11 @@ void AttCtrl::setup()
     nh_.getParam("offset2",offset_(2));
 
     for(int i = 0; i < 3; i++)
+    {
         wheel_vel[i] = 0;
+        q_lift_actual(i) = offset_(i);
+    }
+
 
     /**
      * Subscriber setup
@@ -71,28 +75,29 @@ void AttCtrl::get_pitch()
     
 }
 
-double AttCtrl::get_rear_lift_pos()
+double AttCtrl::get_rear_lift_pos(int i)
 {
     double q_lift_rear;
-    q_lift_rear = q_lift_fix - Kp*theta;
+    q_lift_rear = q_lift_actual(i+1) + Kp*theta;
     return q_lift_rear;
 }
 
 void AttCtrl::publish_values()
 {
     int32_t q_lift_des_inc[3];
-    double q_lift_rear;
+    double q_lift_rear[2];
 
     rp rp_msg;
 
     get_pitch();
 
-    q_lift_rear = get_rear_lift_pos();
+    q_lift_rear[0] = get_rear_lift_pos(0);
+    q_lift_rear[1] = get_rear_lift_pos(1);
 
     q_lift_des_inc[0] = converter_ptr->convert_q_lift_des2inc(q_lift_fix, offset_(0));
     
     for(int i = 0; i < 2; i++)
-        q_lift_des_inc[i+1] = converter_ptr->convert_q_lift_des2inc(q_lift_rear, offset_(i+1));
+        q_lift_des_inc[i+1] = converter_ptr->convert_q_lift_des2inc(q_lift_rear[i], offset_(i+1));
 
     for(int i = 0; i < 3; i++)
     {
@@ -105,8 +110,8 @@ void AttCtrl::publish_values()
     target_dxl_msg.target_dxl[1] = (int32_t) -70.0/40.0*4096.0/360.0*60.0;
     target_dxl_msg.target_dxl[2] = (int32_t) 70.0/40.0*4096.0/360.0*60.0;
 
-    rp_msg.phi = phi;
-    rp_msg.theta = theta;
+    rp_msg.phi = phi*180.0/M_PI;
+    rp_msg.theta = theta*180.0/M_PI;
 
     target_publisher.publish(target_msg);
     target_dxl_publisher.publish(target_dxl_msg);
@@ -115,6 +120,7 @@ void AttCtrl::publish_values()
 
 void AttCtrl::callback_imu(const Imu::ConstPtr& imu_msg)
 {
+
     q_.x() = imu_msg->orientation.x;
     q_.y() = imu_msg->orientation.y;
     q_.z() = imu_msg->orientation.z;
@@ -128,6 +134,18 @@ void AttCtrl::callback_twist(const Twist::ConstPtr& twist_msg)
     
     wheel_vel[0] = -wheel_vel[0];
 
+}
+
+void AttCtrl::callback_actual(const actual::ConstPtr& actual_msg)
+{
+    int32_t q_lift_actual_inc[3];
+    for(int i = 0; i < 3; i++)
+    {
+        q_lift_actual_inc[i] = actual_msg->act_LIFT_pos[i];
+        
+        q_lift_actual(i) = converter_ptr->convert_actual2q_lift(q_lift_actual_inc[i], offset_(i));
+    }
+    
 }
 
 AttCtrl::~AttCtrl()
