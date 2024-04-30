@@ -59,9 +59,11 @@ void DriverCtrl::get_wheel_linear_vel()
     rho2 = sqrt(pow(rho-0.5*L,2) + pow(1.0/3.0*H,2));
     rho3 = sqrt(pow(rho+0.5*L,2) + pow(1.0/3.0*H,2));
     
-    wheel_linear_vel << rho1*fabs(angular_vel), 
-                        rho2*fabs(angular_vel), 
-                        rho3*fabs(angular_vel);
+    wheel_linear_vel << rho1, 
+                        rho2, 
+                        rho3;
+    
+    wheel_linear_vel = wheel_linear_vel*fabs(angular_vel);
 
     if(linear_vel_x < 0)
         wheel_linear_vel = - wheel_linear_vel;
@@ -89,9 +91,11 @@ void DriverCtrl::twist2wheel_vel_steer()
     {
         get_rho();
 
-        steering_pos << atan(2.0*H/3.0/rho)*180.0/M_PI,
-        (M_PI/3.0 - atan(H/3.0/(rho - 0.5 * L)))*180.0/M_PI,
-        -( M_PI/3.0 + atan(H/3.0/(rho + 0.5 * L)))*180.0/M_PI;
+        steering_pos << atan(2.0*H/3.0/rho),
+        (M_PI/3.0 - atan(H/3.0/(rho - 0.5 * L))),
+        -( M_PI/3.0 + atan(H/3.0/(rho + 0.5 * L)));
+
+        steering_pos = steering_pos * 180.0/M_PI;
 
         get_wheel_linear_vel();
 
