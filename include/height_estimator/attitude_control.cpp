@@ -131,7 +131,7 @@ void AttCtrl::callback_imu(const Imu::ConstPtr& imu_msg)
 void AttCtrl::callback_twist(const Twist::ConstPtr& twist_msg)
 {
     for(int i = 0; i < 3; i++)
-        wheel_vel[i] = -(twist_msg->linear.x*0.169*60.0/M_PI);
+        wheel_vel[i] = -(twist_msg->linear.x/0.169*60.0/M_PI);
     
     wheel_vel[0] = -wheel_vel[0];
 
