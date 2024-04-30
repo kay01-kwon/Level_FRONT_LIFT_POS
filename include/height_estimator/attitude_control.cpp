@@ -121,7 +121,6 @@ void AttCtrl::publish_values()
 
 void AttCtrl::callback_imu(const Imu::ConstPtr& imu_msg)
 {
-
     q_.x() = imu_msg->orientation.x;
     q_.y() = imu_msg->orientation.y;
     q_.z() = imu_msg->orientation.z;
@@ -143,7 +142,6 @@ void AttCtrl::callback_actual(const actual::ConstPtr& actual_msg)
     for(int i = 0; i < 3; i++)
     {
         q_lift_actual_inc[i] = actual_msg->act_LIFT_pos[i];
-        
         q_lift_actual(i) = converter_ptr->convert_actual2q_lift(q_lift_actual_inc[i], offset_(i));
     }
     
