@@ -1,5 +1,5 @@
-#ifndef DRIVING_CONTROL_HPP
-#define DRIVING_CONTROL_HPP
+#ifndef DRIVER_CONTROL_HPP
+#define DRIVER_CONTROL_HPP
 
 #include "converter.hpp"
 
@@ -15,9 +15,6 @@ using msg_pkg::target_dxl;
 
 using geometry_msgs::Twist;
 
-typedef Eigen::Matrix<double,6,2> mat62;
-typedef Eigen::Matrix<double,6,1> mat61;
-typedef Eigen::Matrix<double,2,1> mat21;
 
 class DriverCtrl{
 
@@ -27,9 +24,11 @@ class DriverCtrl{
 
         void setup();
 
-        void twist2wheel_vel();
+        void get_rho();
 
-        void steering_pos2dxl_inc();
+        void get_wheel_linear_vel();
+
+        void twist2wheel_vel_steer();
 
         void publish_values();
 
@@ -48,32 +47,23 @@ class DriverCtrl{
 
     void callback_twist(const Twist::ConstPtr& twist_msg);
 
-    mat31 offset_, steering_pos;
+    mat31 offset_, steering_pos, wheel_linear_vel;
+    mat31 wheel_vel_radps;
 
     double q_lift_set;
 
-    mat21 twist;
-
-
-    mat21 v_f, v_l, v_r;
-
-    mat61 wheel_vel_steering_pos;
-
-    mat62 transform;
-
     int32_t q_lift_inc[3];
-    int32_t wheel_vel[3];
+    int32_t wheel_vel_rpm[3];
     int32_t steering_pos_inc[3];
 
-    double wheel_sep_1, wheel_sep_2;
+    double H, L;
 
-    double linear_vel_x, linear_vel_y;
-    double angular_vel; 
+    double linear_vel_x, linear_vel_y, angular_vel, rho;
 
     double wheel_radius, radps2rpm;
 
+    double deg2inc, rad2deg;
+
 };
-
-
 
 #endif

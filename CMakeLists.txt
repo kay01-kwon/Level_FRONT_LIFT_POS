@@ -48,3 +48,10 @@ include/height_estimator/attitude_control.cpp
 src/attitude_control_node.cpp)
 
 target_link_libraries(attitude_control_node ${catkin_LIBRARIES})
+
+add_executable(driver_control_node
+include/height_estimator/converter.cpp
+include/height_estimator/driver_control.cpp
+src/driver_control_node.cpp)
+
+target_link_libraries(driver_control_node ${catkin_LIBRARIES})

@@ -1,0 +1,10 @@
+<launch>
+    <node pkg="height_estimator" type="driver_control_node" name="h_est_node" output="screen"/>
+        <param name="offset0" type="double" value="0"/>
+        <param name="offset1" type="double" value="0"/>
+        <param name="offset2" type="double" value="0"/>
+        
+        <param name="H" type="double" value="0.3"/>
+        <param name="L" type="double" value="0.5196152423"/>
+        <param name="q_lift_fix" type="double" value="60.0"/>
+</launch>
