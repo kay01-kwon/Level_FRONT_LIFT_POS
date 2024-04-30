@@ -24,10 +24,12 @@ void DriverCtrl::setup()
     rho = 0;
 
     wheel_radius = 0.169/2.0;
-    radps2rpm = 2.0*M_PI/60.0;
+    radps2rpm = 60.0/2.0/M_PI;
 
     deg2inc = 4096.0/360.0;
     rad2deg = 180.0/M_PI;
+
+    enable_control = false;
 
     for(int i = 0; i < 3; i++)
         q_lift_inc[i] = converter_ptr->convert_q_lift_des2inc(q_lift_set,offset_(i));
@@ -57,9 +59,12 @@ void DriverCtrl::get_wheel_linear_vel()
     rho2 = sqrt(pow(rho-0.5*L,2) + pow(1.0/3.0*H,2));
     rho3 = sqrt(pow(rho+0.5*L,2) + pow(1.0/3.0*H,2));
     
-    wheel_linear_vel << rho1*angular_vel, 
-                        rho2*angular_vel, 
-                        rho3*angular_vel;
+    wheel_linear_vel << rho1*fabs(angular_vel), 
+                        rho2*fabs(angular_vel), 
+                        rho3*fabs(angular_vel);
+
+    if(linear_vel_x < 0)
+        wheel_linear_vel = - wheel_linear_vel;
 
 }
 
@@ -98,7 +103,7 @@ void DriverCtrl::twist2wheel_vel_steer()
     }
 
     for(int i = 0; i < 3;i++)
-        wheel_vel_rpm[i] = (int32_t) wheel_vel_radps(i) * radps2rpm;
+        wheel_vel_rpm[i] = (int32_t) -wheel_vel_radps(i) * radps2rpm;
     
     wheel_vel_rpm[0] = -wheel_vel_rpm[0];
 

@@ -64,6 +64,8 @@ class DriverCtrl{
 
     double deg2inc, rad2deg;
 
+    bool enable_control;
+
 };
 
 #endif
