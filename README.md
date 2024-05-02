@@ -68,3 +68,26 @@ Launch the pix hawk4.
 ```
 roslaunch mavros px4.launch
 ```
+
+
+## 5. Driver node
+
+
+``` 
+roslaunch height_estimator driver_ctrl.launch
+```
+
+
+```
+roslaunch dualarm_mobile_teleop dualarm_mobile_teleop_key.launch
+```
+
+## 6. Attitude control
+
+```
+roslaunch height_estimator attitude_ctrl.launch
+```
+
+```
+roslaunch dualarm_mobile_teleop dualarm_mobile_teleop_key.launch
+```
